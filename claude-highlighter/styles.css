@@ -1,0 +1,254 @@
+/* ─── Claude Highlighter — Dark theme, Claude orange accent ─────────────── */
+
+/* Palette
+   bg-base:    #1a1814   warm dark background
+   bg-raised:  #231f1b   slightly lighter for inputs/chips
+   bg-hover:   #2e2a25   hover states
+   border:     #2e2a25   subtle warm border
+   border-mid: #3d3730   mid-strength border
+   text-pri:   #f5f0eb   primary text, warm off-white
+   text-sec:   #9e8e80   secondary / placeholder
+   orange:     #cc785c   Claude accent
+   orange-dim: #7a3f2a   muted orange for chip backgrounds
+   orange-glow:rgba(204,120,92,0.25)
+*/
+
+/* Highlighted text in chat */
+mark.ch-highlight {
+  background: rgba(250, 204, 21, 0.35) !important;
+  border-bottom: 2px solid rgba(234, 179, 8, 0.75) !important;
+  border-radius: 2px !important;
+  color: inherit !important;
+  cursor: pointer !important;
+  transition: background 0.15s !important;
+  padding: 0 1px !important;
+}
+mark.ch-highlight:hover {
+  background: rgba(250, 204, 21, 0.58) !important;
+}
+
+/* ─── Strip ──────────────────────────────────────────────────────────────── */
+#ch-strip {
+  position: fixed !important;
+  z-index: 999999 !important;
+  display: none;
+  flex-direction: column !important;
+  gap: 10px !important;
+  background: #1a1814 !important;
+  border: 1px solid #2e2a25 !important;
+  border-radius: 14px !important;
+  padding: 12px 14px !important;
+  font-family: system-ui, -apple-system, sans-serif !important;
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(204,120,92,0.08) !important;
+  box-sizing: border-box !important;
+  animation: ch-strip-in 0.16s ease !important;
+}
+
+@keyframes ch-strip-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Top row ────────────────────────────────────────────────────────────── */
+.ch-strip-top {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+}
+
+.ch-strip-chips {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+/* Multi-select toggle */
+.ch-multiselect-toggle {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  flex-shrink: 0 !important;
+  background: #231f1b !important;
+  border: 1px solid #3d3730 !important;
+  color: #9e8e80 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  padding: 5px 10px !important;
+  border-radius: 8px !important;
+  font-family: system-ui, sans-serif !important;
+  transition: all 0.15s !important;
+  white-space: nowrap !important;
+}
+.ch-multiselect-toggle:hover {
+  background: #2e2a25 !important;
+  color: #f5f0eb !important;
+  border-color: #4d4540 !important;
+}
+.ch-multiselect-toggle.ch-ms-active {
+  background: rgba(204,120,92,0.15) !important;
+  border-color: rgba(204,120,92,0.4) !important;
+  color: #cc785c !important;
+}
+
+/* ─── Chips ──────────────────────────────────────────────────────────────── */
+.ch-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  background: #231f1b !important;
+  border: 1px solid rgba(204,120,92,0.25) !important;
+  border-radius: 20px !important;
+  padding: 4px 10px 4px 7px !important;
+  max-width: 240px !important;
+  transition: border-color 0.15s !important;
+}
+.ch-chip:hover {
+  border-color: rgba(204,120,92,0.55) !important;
+}
+.ch-chip-num {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #1a1814 !important;
+  background: #cc785c !important;
+  width: 17px !important;
+  height: 17px !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  font-family: system-ui, sans-serif !important;
+}
+.ch-chip-text {
+  font-size: 13px !important;
+  color: #c4b5a8 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-style: italic !important;
+}
+.ch-chip-remove {
+  background: none !important;
+  border: none !important;
+  color: #9e8e80 !important;
+  cursor: pointer !important;
+  font-size: 10px !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  flex-shrink: 0 !important;
+  transition: color 0.15s !important;
+  opacity: 0.7 !important;
+}
+.ch-chip-remove:hover {
+  color: #e87c6a !important;
+  opacity: 1 !important;
+}
+
+/* ─── Bottom row ─────────────────────────────────────────────────────────── */
+.ch-strip-bottom {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.ch-strip-input {
+  flex: 1 !important;
+  background: #231f1b !important;
+  border: 1px solid #3d3730 !important;
+  border-radius: 10px !important;
+  color: #f5f0eb !important;
+  font-size: 14px !important;
+  font-family: system-ui, sans-serif !important;
+  padding: 8px 12px !important;
+  outline: none !important;
+  transition: border-color 0.15s, background 0.15s !important;
+  min-width: 0 !important;
+}
+.ch-strip-input::placeholder {
+  color: #6a5e55 !important;
+}
+.ch-strip-input:focus {
+  border-color: rgba(204,120,92,0.6) !important;
+  background: #1f1b18 !important;
+}
+
+.ch-strip-send {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  background: #cc785c !important;
+  border: none !important;
+  border-radius: 10px !important;
+  color: #fff !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  transition: all 0.15s !important;
+}
+.ch-strip-send:hover {
+  background: #b8664c !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 3px 12px rgba(204,120,92,0.4) !important;
+}
+
+.ch-strip-clear {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  background: none !important;
+  border: 1px solid #3d3730 !important;
+  border-radius: 10px !important;
+  color: #6a5e55 !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  transition: all 0.15s !important;
+}
+.ch-strip-clear:hover {
+  border-color: rgba(204,120,92,0.4) !important;
+  color: #cc785c !important;
+  background: rgba(204,120,92,0.08) !important;
+}
+
+/* ─── Floating toolbar ───────────────────────────────────────────────────── */
+#ch-floating-toolbar {
+  position: absolute !important;
+  z-index: 999999 !important;
+  display: none;
+  align-items: center !important;
+  background: #1a1814 !important;
+  border: 1px solid #3d3730 !important;
+  border-radius: 10px !important;
+  padding: 6px 10px !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35) !important;
+  animation: ch-pop-in 0.12s ease !important;
+}
+@keyframes ch-pop-in {
+  from { opacity: 0; transform: scale(0.93) translateY(4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.ch-toolbar-btn {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: none !important;
+  border: none !important;
+  color: #f5f0eb !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  padding: 4px 6px !important;
+  border-radius: 6px !important;
+  font-family: system-ui, sans-serif !important;
+  white-space: nowrap !important;
+  transition: background 0.15s !important;
+}
+.ch-toolbar-btn:hover {
+  background: #2e2a25 !important;
+  color: #cc785c !important;
+}
