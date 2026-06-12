@@ -1,0 +1,397 @@
+/* ─── Reask v1.4 — Monochrome, works on Claude and ChatGPT ──────────────── */
+
+/* Palette
+   bg-base:    #111111
+   bg-raised:  #1a1a1a
+   bg-hover:   #222222
+   border-dim: #2a2a2a
+   border-mid: #3a3a3a
+   text-pri:   #f0f0f0
+   text-sec:   #888888
+   text-dim:   #555555
+   accent:     #ffffff   (active states, send button, focus rings)
+*/
+
+/* ─── Highlight spans in conversation ────────────────────────────────────── */
+span.ch-highlight {
+  background: rgba(250, 204, 21, 0.30) !important;
+  /* Explicitly inherit everything so nothing shifts */
+  color: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  font-style: inherit !important;
+  font-family: inherit !important;
+  font-variant: inherit !important;
+  line-height: inherit !important;
+  letter-spacing: inherit !important;
+  text-decoration: inherit !important;
+  text-transform: inherit !important;
+  vertical-align: inherit !important;
+  white-space: inherit !important;
+  word-spacing: inherit !important;
+  /* Layout — keep it purely inline, no box model changes */
+  display: inline !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-radius: 2px !important;
+  cursor: pointer !important;
+  transition: background 0.15s !important;
+}
+span.ch-highlight:hover {
+  background: rgba(250, 204, 21, 0.48) !important;
+}
+
+/* ─── Strip ──────────────────────────────────────────────────────────────── */
+#ch-strip {
+  position: fixed !important;
+  z-index: 999999 !important;
+  display: none;
+  flex-direction: column !important;
+  gap: 10px !important;
+  background: rgba(8, 8, 8, 0.30) !important;
+  backdrop-filter: blur(10px) saturate(1.2) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(1.2) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  border-radius: 14px !important;
+  padding: 12px 14px !important;
+  font-family: system-ui, -apple-system, sans-serif !important;
+  box-shadow: 0 -4px 28px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.03) !important;
+  box-sizing: border-box !important;
+  animation: ch-strip-in 0.16s ease !important;
+}
+@keyframes ch-strip-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Top row ────────────────────────────────────────────────────────────── */
+.ch-strip-top {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+}
+.ch-strip-chips {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+  align-items: flex-start !important;
+}
+
+/* ─── Multi-select toggle ────────────────────────────────────────────────── */
+.ch-multiselect-toggle {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  flex-shrink: 0 !important;
+  background: #1a1a1a !important;
+  border: 1px solid #3a3a3a !important;
+  color: #555555 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  padding: 5px 10px !important;
+  border-radius: 8px !important;
+  font-family: system-ui, sans-serif !important;
+  transition: all 0.15s !important;
+  white-space: nowrap !important;
+}
+.ch-multiselect-toggle:hover {
+  background: #222222 !important;
+  color: #f0f0f0 !important;
+  border-color: #555555 !important;
+}
+.ch-multiselect-toggle.ch-ms-active {
+  background: rgba(255,255,255,0.08) !important;
+  border-color: rgba(255,255,255,0.3) !important;
+  color: #f0f0f0 !important;
+}
+
+/* ─── Chips ──────────────────────────────────────────────────────────────── */
+.ch-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  background: #1a1a1a !important;
+  border: 1px solid #3a3a3a !important;
+  border-radius: 20px !important;
+  padding: 4px 8px 4px 7px !important;
+  max-width: 260px !important;
+  transition: border-color 0.15s, opacity 0.15s !important;
+  cursor: grab !important;
+  user-select: none !important;
+}
+.ch-chip:hover {
+  border-color: #666666 !important;
+}
+
+@keyframes ch-chip-pop {
+  0%   { transform: scale(0.82); opacity: 0.4; }
+  60%  { transform: scale(1.06); opacity: 1; }
+  100% { transform: scale(1);    opacity: 1; }
+}
+.ch-chip-pop {
+  animation: ch-chip-pop 0.22s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+.ch-chip-dragging { opacity: 0.35 !important; cursor: grabbing !important; }
+.ch-chip-drag-over {
+  border-color: #ffffff !important;
+  background: rgba(255,255,255,0.06) !important;
+}
+
+.ch-chip-num {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #111111 !important;
+  background: #f0f0f0 !important;
+  width: 17px !important;
+  height: 17px !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  font-family: system-ui, sans-serif !important;
+}
+.ch-chip-text {
+  font-size: 13px !important;
+  color: #aaaaaa !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-style: italic !important;
+}
+.ch-chip-comment-dot {
+  font-size: 7px !important;
+  color: #ffffff !important;
+  flex-shrink: 0 !important;
+  line-height: 1 !important;
+}
+
+/* Note toggle button on chip */
+.ch-chip-note-toggle {
+  background: none !important;
+  border: none !important;
+  color: #444444 !important;
+  cursor: pointer !important;
+  padding: 0 1px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+  transition: color 0.15s !important;
+  line-height: 1 !important;
+}
+.ch-chip-note-toggle:hover {
+  color: #aaaaaa !important;
+}
+.ch-chip-note-toggle.ch-note-open {
+  color: #ffffff !important;
+}
+
+.ch-chip-remove {
+  background: none !important;
+  border: none !important;
+  color: #555555 !important;
+  cursor: pointer !important;
+  font-size: 10px !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  flex-shrink: 0 !important;
+  opacity: 0.7 !important;
+  transition: color 0.15s, opacity 0.15s !important;
+}
+.ch-chip-remove:hover { color: #f0f0f0 !important; opacity: 1 !important; }
+
+/* ─── Floating comment box (position: fixed, outside conversation DOM) ───── */
+.ch-float-comment {
+  position: fixed !important;
+  z-index: 1000001 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  background: rgba(8, 8, 8, 0.30) !important;
+  backdrop-filter: blur(10px) saturate(1.2) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(1.2) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  border-radius: 10px !important;
+  padding: 7px 10px !important;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.2) !important;
+  font-family: system-ui, -apple-system, sans-serif !important;
+  animation: ch-comment-in 0.14s ease !important;
+}
+@keyframes ch-comment-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.ch-float-comment-icon {
+  flex-shrink: 0 !important;
+  color: #555555 !important;
+  display: flex !important;
+  align-items: center !important;
+  pointer-events: none !important;
+}
+.ch-float-input {
+  flex: 1 !important;
+  background: transparent !important;
+  border: none !important;
+  border-left: 2px solid #3a3a3a !important;
+  border-radius: 0 !important;
+  color: #f0f0f0 !important;
+  font-size: 13px !important;
+  font-family: system-ui, -apple-system, sans-serif !important;
+  padding: 2px 8px !important;
+  outline: none !important;
+  transition: border-color 0.15s !important;
+  min-width: 0 !important;
+}
+.ch-float-input:focus {
+  border-left-color: #ffffff !important;
+}
+.ch-float-input.ch-has-note {
+  border-left-color: #ffffff !important;
+}
+.ch-float-input::placeholder {
+  color: #3a3a3a !important;
+}
+
+/* ─── Bottom row ─────────────────────────────────────────────────────────── */
+.ch-strip-bottom {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+.ch-strip-input {
+  flex: 1 !important;
+  background: #1a1a1a !important;
+  border: 1px solid #3a3a3a !important;
+  border-radius: 10px !important;
+  color: #f0f0f0 !important;
+  font-size: 14px !important;
+  font-family: system-ui, sans-serif !important;
+  padding: 8px 12px !important;
+  outline: none !important;
+  transition: border-color 0.15s, background 0.15s !important;
+  min-width: 0 !important;
+}
+.ch-strip-input::placeholder { color: #444444 !important; }
+.ch-strip-input:focus {
+  border-color: rgba(255,255,255,0.35) !important;
+  background: #161616 !important;
+}
+
+/* ─── Length pills ───────────────────────────────────────────────────────── */
+.ch-length-pills {
+  display: flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+  flex-shrink: 0 !important;
+  background: #1a1a1a !important;
+  border: 1px solid #3a3a3a !important;
+  border-radius: 9px !important;
+  padding: 3px !important;
+}
+.ch-length-pill {
+  background: none !important;
+  border: none !important;
+  border-radius: 6px !important;
+  color: #555555 !important;
+  cursor: pointer !important;
+  font-family: system-ui, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  padding: 4px 8px !important;
+  transition: background 0.12s, color 0.12s !important;
+  white-space: nowrap !important;
+}
+.ch-length-pill:hover {
+  color: #aaaaaa !important;
+  background: #2a2a2a !important;
+}
+.ch-length-pill.ch-length-active {
+  background: rgba(255,255,255,0.1) !important;
+  color: #f0f0f0 !important;
+}
+
+/* ─── Send & clear buttons ───────────────────────────────────────────────── */
+.ch-strip-send {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  background: #f0f0f0 !important;
+  border: none !important;
+  border-radius: 10px !important;
+  color: #111111 !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  transition: all 0.15s !important;
+}
+.ch-strip-send:hover {
+  background: #ffffff !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 3px 12px rgba(255,255,255,0.15) !important;
+}
+.ch-strip-clear {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  background: none !important;
+  border: 1px solid #3a3a3a !important;
+  border-radius: 10px !important;
+  color: #444444 !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  transition: all 0.15s !important;
+}
+.ch-strip-clear:hover {
+  border-color: #888888 !important;
+  color: #f0f0f0 !important;
+  background: rgba(255,255,255,0.05) !important;
+}
+
+/* ─── Floating toolbar ───────────────────────────────────────────────────── */
+#ch-floating-toolbar {
+  position: absolute !important;
+  z-index: 999999 !important;
+  display: none;
+  align-items: center !important;
+  background: rgba(8, 8, 8, 0.30) !important;
+  backdrop-filter: blur(10px) saturate(1.2) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(1.2) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  border-radius: 10px !important;
+  padding: 6px 10px !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2) !important;
+  animation: ch-pop-in 0.12s ease !important;
+}
+@keyframes ch-pop-in {
+  from { opacity: 0; transform: scale(0.93) translateY(4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.ch-toolbar-btn {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: none !important;
+  border: none !important;
+  color: #f0f0f0 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  padding: 4px 6px !important;
+  border-radius: 6px !important;
+  font-family: system-ui, sans-serif !important;
+  white-space: nowrap !important;
+  transition: background 0.15s !important;
+}
+.ch-toolbar-btn:hover {
+  background: #222222 !important;
+  color: #ffffff !important;
+}
